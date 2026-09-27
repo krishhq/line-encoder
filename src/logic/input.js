@@ -1,3 +1,5 @@
+const sample=1; //1 bit per sample
+
 const data = (k) => {
   let d = [];
   if (k > 5) {
