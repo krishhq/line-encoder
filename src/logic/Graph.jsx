@@ -6,8 +6,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function Graph(){
-    
+function Graph({info}){
+    // console.log("graph",info);
 
     return(
         <div className="container">

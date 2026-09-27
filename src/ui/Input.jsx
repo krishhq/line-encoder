@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
 
-function Input({updateInfo}) {
-    let [formData, setFormData]=useState({
-        databits:"",
-        encoding:""
+function Input({ updateInfo }) {
+  let [formData, setFormData] = useState({
+    databits: "",
+    encoding: "",
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    updateInfo(formData);
+  };
+  const handleInputChange = (e) => {
+    setFormData((currData) => {
+      return { ...currData, [e.target.name]: e.target.value };
     });
-    const handleSubmit=(e)=>{
-        e.preventDefault();
-        console.log(formData);
-        updateInfo(formData);
-    };
-    const handleInputChange=(e)=>{
-        setFormData((currData)=>{
-            return {...currData, [e.target.name]:e.target.value};
-        });
-    }
+  };
   return (
     <div className="container">
-        <h1>Input</h1>
+      <h1>Input</h1>
       <form onSubmit={handleSubmit} className="form">
         <label htmlFor="databits">Number of databits:</label>
         <input
@@ -27,25 +27,34 @@ function Input({updateInfo}) {
           placeholder="number of bits"
           value={formData.databits}
           onChange={handleInputChange}
+          required
         />
-        <br/>
+        <br />
         <label htmlFor="encoding">Select encoding:</label>
-        <select name="encoding" id="encoding" value={formData.encoding} onChange={handleInputChange}>
-          <option value="unipolar NRZ">Unipolar NRZ</option>
-          <option value="unipolar RZ">Unipolar RZ</option>
-          <option value="polar NRZ-L">Polar NRZ-L</option>
-          <option value="polar NRZ-I">Polar NRZ-I</option>
-          <option value="polar RZ">Polar RZ</option>
+        <select
+          name="encoding"
+          id="encoding"
+          value={formData.encoding}
+          onChange={handleInputChange}
+          required
+        >
+          <option value="unipolar_NRZ">Unipolar NRZ</option>
+          <option value="unipolar_RZ">Unipolar RZ</option>
+          <option value="polar_NRZ-L">Polar NRZ-L</option>
+          <option value="polar_NRZ-I">Polar NRZ-I</option>
+          <option value="polar_RZ">Polar RZ</option>
           <option value="manchester">Manchester</option>
-          <option value="differential manchester">
+          <option value="differential_manchester">
             Differential Manchester
           </option>
           <option value="ami">AMI</option>
           <option value="mlt-3">MLT-3</option>
           <option value="pseudoternary">Pseudoternary</option>
         </select>
-        <br/>
-        <button type="submit" className="btn btn-outline-info">Submit</button>
+        <br />
+        <button type="submit" className="btn btn-outline-info">
+          Submit
+        </button>
       </form>
     </div>
   );

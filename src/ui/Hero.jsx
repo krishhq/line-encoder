@@ -7,11 +7,16 @@ function Hero(){
         databits:"",
         encoding:""
     });
-    let updateInfo=(newInfo)=>setInfo(newInfo);
+    let updateInfo=(newInfo)=>{
+        setInfo(newInfo);
+    }
+    // console.log("hero section",info);
     return(
         <div>
-            <Input updateInfo={updateInfo}/>
-            <Graph/>
+            <div className="container">
+                <Input updateInfo={updateInfo}/>
+                <Graph info={info}/>
+            </div>
         </div>
     );
 }
