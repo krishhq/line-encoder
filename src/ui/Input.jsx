@@ -17,6 +17,7 @@ function Input({updateInfo}) {
     }
   return (
     <div className="container">
+        <h1>Input</h1>
       <form onSubmit={handleSubmit} className="form">
         <label htmlFor="databits">Number of databits:</label>
         <input

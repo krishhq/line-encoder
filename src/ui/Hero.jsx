@@ -10,7 +10,7 @@ function Hero(){
     let updateInfo=(newInfo)=>setInfo(newInfo);
     return(
         <div>
-            <Input info={updateInfo}/>
+            <Input updateInfo={updateInfo}/>
             <Graph/>
         </div>
     );
