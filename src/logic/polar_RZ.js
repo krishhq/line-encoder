@@ -1,0 +1,1 @@
+import { data, clock, time } from "./input";

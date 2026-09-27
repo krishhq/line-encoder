@@ -7,7 +7,7 @@ import { Doughnut } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Graph(){
-
+    
 
     return(
         <div>
