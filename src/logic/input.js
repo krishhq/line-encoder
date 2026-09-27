@@ -1,8 +1,14 @@
-const sample=1; //1 bit per sample
+const sampleSizeArr = [
+  { type: "NRZ-L", sample: 1 },
+  { type: "NRZ-I", sample: 1 },
+  { type: "Manchester", sample: 2 },
+  { type: "Differential Manchester", sample: 2 },
+  { type: "RZ", sample: 2 },
+];
 
 const data = (k) => {
   let d = [];
-  if (k > 5) {
+  if (k > 0) {
     for (let i = 0; i < k; i++) {
       d[i] = Math.round(Math.random());
       console.log(d[i]);
@@ -11,11 +17,14 @@ const data = (k) => {
   return d; //call karne ke baad check kar lena ki arr empty hai ya nhi
 };
 
-const clock = (k) => {
+const clock = (k, /**sampleSize*/) => {
+  // let totalSamples = k * sampleSize;
+  let clockCycle = 2;
+  let totalClockCycles = k * clockCycle;
   let clk = [];
-  if (k > 5) {
+  if (k > 0) {
     let bool = true;
-    for (let i = 0; i < k; i++) {
+    for (let i = 0; i < totalClockCycles; i++) {
       if (bool) {
         clk.push(1);
       } else {
@@ -27,10 +36,13 @@ const clock = (k) => {
   return clk;
 };
 
-const time = (k) => {
+const time = (k, /**sampleSize*/) => {
+  // let totalSamples = k * sampleSize;
+  let timeCycle=2;
+  let totalTimeCycles=k*timeCycle;
   let t = [];
-  if (k > 5) {
-    for (let i = 0; i < k; i++) {
+  if (k > 0) {
+    for (let i = 0; i < totalTimeCycles; i++) {
       t[i] = i;
     }
   }
