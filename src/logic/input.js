@@ -49,4 +49,4 @@ const time = (k, /**sampleSize*/) => {
   return t;
 };
 
-export default { data, clock, time };
+export { data, clock, time };

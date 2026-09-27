@@ -28,6 +28,7 @@ function Input({updateInfo}) {
           value={formData.databits}
           onChange={handleInputChange}
         />
+        <br/>
         <label htmlFor="encoding">Select encoding:</label>
         <select name="encoding" id="encoding" value={formData.encoding} onChange={handleInputChange}>
           <option value="unipolar NRZ">Unipolar NRZ</option>
@@ -43,7 +44,8 @@ function Input({updateInfo}) {
           <option value="mlt-3">MLT-3</option>
           <option value="pseudoternary">Pseudoternary</option>
         </select>
-        <button type="submit" className="btn">Submit</button>
+        <br/>
+        <button type="submit" className="btn btn-outline-info">Submit</button>
       </form>
     </div>
   );

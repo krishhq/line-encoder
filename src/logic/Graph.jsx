@@ -10,7 +10,7 @@ function Graph(){
     
 
     return(
-        <div>
+        <div className="container">
             <h1>Graph</h1>
         </div>
     );
