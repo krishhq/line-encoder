@@ -125,7 +125,7 @@ const differential_manchester = (bits) => {
  */
 const ami = (bits) => {
   let curr = 1;
-  bits.map((b) => {
+  return bits.map((b) => {
     if (b === 1) {
       curr = -curr;
       return curr;
@@ -141,7 +141,7 @@ const ami = (bits) => {
  */
 const pseudoternary = (bits) => {
   let curr = 1;
-  bits.map((b) => {
+  return bits.map((b) => {
     if (b === 1) {
       curr = -curr;
       return curr;
