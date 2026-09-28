@@ -16,7 +16,7 @@ function Input({ updateInfo }) {
     });
   };
   return (
-    <div className="container">
+    <div className="container" style={{border:"2px solid black"}}>
       <h1>Input</h1>
       <form onSubmit={handleSubmit} className="form">
         <label htmlFor="databits">Number of databits:</label>
@@ -40,15 +40,15 @@ function Input({ updateInfo }) {
         >
           <option value="unipolar_NRZ">Unipolar NRZ</option>
           <option value="unipolar_RZ">Unipolar RZ</option>
-          <option value="polar_NRZ-L">Polar NRZ-L</option>
-          <option value="polar_NRZ-I">Polar NRZ-I</option>
+          <option value="polar_NRZ_L">Polar NRZ-L</option>
+          <option value="polar_NRZ_I">Polar NRZ-I</option>
           <option value="polar_RZ">Polar RZ</option>
           <option value="manchester">Manchester</option>
           <option value="differential_manchester">
             Differential Manchester
           </option>
           <option value="ami">AMI</option>
-          <option value="mlt-3">MLT-3</option>
+          <option value="mlt_3">MLT-3</option>
           <option value="pseudoternary">Pseudoternary</option>
         </select>
         <br />

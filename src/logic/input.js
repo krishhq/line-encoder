@@ -1,6 +1,6 @@
 const sampleSizeArr = [
-  { type: "NRZ-L", sample: 1 },
-  { type: "NRZ-I", sample: 1 },
+  { type: "NRZ_L", sample: 1 },
+  { type: "NRZ_I", sample: 1 },
   { type: "Manchester", sample: 2 },
   { type: "Differential Manchester", sample: 2 },
   { type: "RZ", sample: 2 },
@@ -49,4 +49,4 @@ const time = (k, /**sampleSize*/) => {
   return t;
 };
 
-export { data, clock, time };
+export { data, clock, time, sampleSizeArr };

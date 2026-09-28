@@ -1,14 +1,13 @@
 import {useState, useEffect} from "react";
-// import Plotly from "plotly.js";
 // import Chart from "chart.js";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-// import { Doughnut } from "react-chartjs-2";
+import {sampleSizeArr} from "../logic/input";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Graph({info}){
     // console.log("graph",info);
-
+    
     return(
         <div className="container">
             <h1>Graph</h1>
