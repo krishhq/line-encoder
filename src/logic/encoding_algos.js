@@ -44,9 +44,7 @@ const unipolar_RZ = (bits) => {
  * 0 = -1
  */
 const polar_NRZ_L = (bits) => {
-  const signal = [];
-  bits.forEach((b) => signal.push(b === 1 ? 1 : -1));
-  return signal;
+  return bits.map((b) => (b === 1 ? 1 : -1));
 };
 
 /**
@@ -56,7 +54,7 @@ const polar_NRZ_L = (bits) => {
  */
 const polar_NRZ_I = (bits) => {
   const signal = [];
-  let curr = bits[0];
+  let curr = 1;
   bits.forEach((b) => {
     if (b === 1) {
       curr = -curr;
@@ -128,8 +126,11 @@ const differential_manchester = (bits) => {
 const ami = (bits) => {
   let curr = 1;
   bits.map((b) => {
-    b === 1 ? curr : 0;
-    curr = -curr;
+    if (b === 1) {
+      curr = -curr;
+      return curr;
+    }
+    return 0;
   });
 };
 
@@ -141,16 +142,30 @@ const ami = (bits) => {
 const pseudoternary = (bits) => {
   let curr = 1;
   bits.map((b) => {
-    b === 1 ? 0 : curr;
-    curr = -curr;
+    if (b === 1) {
+      curr = -curr;
+      return curr;
+    }
+    return 0;
   });
 };
 
-// const mlt_3 = (bits) => {
-//     bits.map((b)=>{
-
-//     });
-// };
+/**
+ * Multi level transmit 3
+ * cycles [0,1,0,-1] only on 1, maintains level on 0
+ */
+const mlt_3 = (bits) => {
+  const signal = [];
+  const cycle = [0, 1, 0, -1];
+  let state = 0;
+  bits.forEach((b) => {
+    if (b === 1) {
+      state = (state + 1) % 4;
+    }
+    signal.push(cycle[state]);
+  });
+  return signal;
+};
 
 const b8zs = () => {};
 
@@ -167,7 +182,7 @@ export {
   differential_manchester,
   ami,
   pseudoternary,
-  // mlt_3,
+  mlt_3,
   b8zs,
   hdb3,
 };
