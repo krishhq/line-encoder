@@ -107,7 +107,7 @@ const manchester = (bits) => {
  */
 const differential_manchester = (bits) => {
   const signal = [];
-  let curr = bits[0];
+  let curr = 1;
   bits.forEach((b) => {
     if (b === 0) {
       curr = -curr;
@@ -142,7 +142,7 @@ const ami = (bits) => {
 const pseudoternary = (bits) => {
   let curr = 1;
   return bits.map((b) => {
-    if (b === 1) {
+    if (b === 0) {
       curr = -curr;
       return curr;
     }
