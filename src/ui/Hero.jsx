@@ -40,7 +40,6 @@
 // }
 
 // export default Hero;
-
 import { useState } from "react";
 import Graph from "./Graph.jsx";
 import Input from "../ui/Input.jsx";
@@ -58,25 +57,32 @@ function Hero() {
     clock: [],
     time: [],
     signal: [],
+    graphSignal: [],
   });
 
   const updateInfo = (newInfo) => {
     setInfo(newInfo);
+
     const sampleInfo = sampleSizeArr.find(
-    (item) => item.type === newinfo.encoding,
-  );
+      (item) => item.type === newInfo.encoding,
+    );
+
     const k = Number(newInfo.databits);
 
     const bits = data(k);
     const clockArr = clock(k);
     const timeArr = time(k);
+
     const signal = encode(bits, newInfo.encoding);
+
+    const graphSignal = prepSignal(signal, sampleInfo.sample);
 
     setGraphData({
       bits,
       clock: clockArr,
       time: timeArr,
       signal,
+      graphSignal,
     });
   };
 
