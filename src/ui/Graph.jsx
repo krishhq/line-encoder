@@ -6,7 +6,7 @@ import {sampleSizeArr} from "../logic/input";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Graph({info}){
-    // console.log("graph",info);
+    console.log("graph",info);
     
     return(
         <div className="container">
