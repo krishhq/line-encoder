@@ -41,12 +41,11 @@
 
 // export default Hero;
 
-
 import { useState } from "react";
 import Graph from "./Graph.jsx";
 import Input from "../ui/Input.jsx";
-import { data, clock, time } from "../logic/input.js";
-import encode from "../logic/output.js";
+import { data, clock, time, sampleSizeArr } from "../logic/input.js";
+import { encode, prepSignal } from "../logic/output.js";
 
 function Hero() {
   const [info, setInfo] = useState({
@@ -63,7 +62,9 @@ function Hero() {
 
   const updateInfo = (newInfo) => {
     setInfo(newInfo);
-
+    const sampleInfo = sampleSizeArr.find(
+    (item) => item.type === newinfo.encoding,
+  );
     const k = Number(newInfo.databits);
 
     const bits = data(k);

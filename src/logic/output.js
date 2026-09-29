@@ -14,8 +14,10 @@ import {
   hdb3,
 } from "./encoding_algos";
 
-const encode=(bits, encoding)=> {
-  let signalData=[];
+import { data, clock, time, sampleSizeArr } from "./input";
+
+const encode = (bits, encoding) => {
+  let signalData = [];
   switch (encoding) {
     case "unipolar_NRZ": {
       console.log("unipolar_NRZ");
@@ -77,9 +79,25 @@ const encode=(bits, encoding)=> {
       signalData = hdb3(bits);
       break;
     }
-    default:{
+    default: {
       console.log("Unknown Encoding!", encoding);
     }
   }
   return signalData;
-}
+};
+
+const prepSignal = (signal, sampleSize) => {
+  if (sampleSize === 1) {
+    const graphSignal = [];
+
+    signal.forEach((value) => {
+      graphSignal.push(value, value);
+    });
+
+    return graphSignal;
+  }
+
+  return signal;
+};
+
+export { encode, prepSignal };

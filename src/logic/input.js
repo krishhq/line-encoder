@@ -1,9 +1,20 @@
 const sampleSizeArr = [
-  { type: "NRZ_L", sample: 1 },
-  { type: "NRZ_I", sample: 1 },
-  { type: "Manchester", sample: 2 },
-  { type: "Differential Manchester", sample: 2 },
-  { type: "RZ", sample: 2 },
+  { type: "unipolar_NRZ", sample: 1 },
+  { type: "unipolar_RZ", sample: 2 },
+
+  { type: "polar_NRZ_L", sample: 1 },
+  { type: "polar_NRZ_I", sample: 1 },
+  { type: "polar_RZ", sample: 2 },
+
+  { type: "manchester", sample: 2 },
+  { type: "differential_manchester", sample: 2 },
+
+  { type: "ami", sample: 1 },
+  { type: "pseudoternary", sample: 1 },
+  { type: "mlt_3", sample: 1 },
+
+  { type: "b8zs", sample: 1 },
+  { type: "hdb3", sample: 1 },
 ];
 
 const data = (k) => {
@@ -17,7 +28,7 @@ const data = (k) => {
   return d; //call karne ke baad check kar lena ki arr empty hai ya nhi
 };
 
-const clock = (k, /**sampleSize*/) => {
+const clock = (k /**sampleSize*/) => {
   // let totalSamples = k * sampleSize;
   let clockCycle = 2;
   let totalClockCycles = k * clockCycle;
@@ -36,10 +47,10 @@ const clock = (k, /**sampleSize*/) => {
   return clk;
 };
 
-const time = (k, /**sampleSize*/) => {
+const time = (k /**sampleSize*/) => {
   // let totalSamples = k * sampleSize;
-  let timeCycle=2;
-  let totalTimeCycles=k*timeCycle;
+  let timeCycle = 2;
+  let totalTimeCycles = k * timeCycle;
   let t = [];
   if (k > 0) {
     for (let i = 0; i < totalTimeCycles; i++) {

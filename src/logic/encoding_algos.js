@@ -167,9 +167,93 @@ const mlt_3 = (bits) => {
   return signal;
 };
 
-const b8zs = () => {};
+const b8zs = (bits) => {
+  const signal = [];
+  let lastPulse = -1;
 
-const hdb3 = () => {};
+  for (let i = 0; i < bits.length; ) {
+    // Check for 8 consecutive zeros
+    if (
+      bits[i] === 0 &&
+      bits[i + 1] === 0 &&
+      bits[i + 2] === 0 &&
+      bits[i + 3] === 0 &&
+      bits[i + 4] === 0 &&
+      bits[i + 5] === 0 &&
+      bits[i + 6] === 0 &&
+      bits[i + 7] === 0
+    ) {
+      const B = -lastPulse;
+      const V = lastPulse;
+
+      signal.push(0, 0, 0, V, B, 0, B, V);
+
+      lastPulse = V;
+      i += 8;
+      continue;
+    }
+
+    if (bits[i] === 1) {
+      lastPulse = -lastPulse;
+      signal.push(lastPulse);
+    } else {
+      signal.push(0);
+    }
+
+    i++;
+  }
+
+  return signal;
+};
+
+const hdb3 = (bits) => {
+  const signal = [];
+
+  let lastPulse = -1;
+  let pulseCount = 0;
+
+  for (let i = 0; i < bits.length; ) {
+    // Check for 4 consecutive zeros
+    if (
+      bits[i] === 0 &&
+      bits[i + 1] === 0 &&
+      bits[i + 2] === 0 &&
+      bits[i + 3] === 0
+    ) {
+      const V = lastPulse;
+
+      if (pulseCount % 2 === 0) {
+        // B00V
+        const B = -lastPulse;
+
+        signal.push(B, 0, 0, V);
+
+        lastPulse = V;
+      } else {
+        // 000V
+        signal.push(0, 0, 0, V);
+
+        lastPulse = V;
+      }
+
+      pulseCount = 0;
+      i += 4;
+      continue;
+    }
+
+    if (bits[i] === 1) {
+      lastPulse = -lastPulse;
+      signal.push(lastPulse);
+      pulseCount++;
+    } else {
+      signal.push(0);
+    }
+
+    i++;
+  }
+
+  return signal;
+};
 
 export {
   encodings,
