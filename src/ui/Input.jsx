@@ -1,39 +1,53 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function Input({ updateInfo }) {
-  let [formData, setFormData] = useState({
-    databits: "",
-    encoding: "",
+  const [formData, setFormData] = useState({
+    databits: "8",
+    encoding: "unipolar_NRZ",
+    noiseLevel: "0.2",
   });
+
+  const handleInputChange = (e) => {
+    setFormData((current) => ({
+      ...current,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     updateInfo(formData);
   };
-  const handleInputChange = (e) => {
-    setFormData((currData) => {
-      return { ...currData, [e.target.name]: e.target.value };
-    });
-  };
+
   return (
-    <div className="container" style={{border:"2px solid black"}}>
-      <h1>Input</h1>
-      <form onSubmit={handleSubmit} className="form">
-        <label htmlFor="databits">Number of databits:</label>
+    <div
+      className="container"
+      style={{ border: "2px solid black", padding: "16px" }}
+    >
+      <h2>Input</h2>
+
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="databits">Number of data bits:</label>
+
         <input
           id="databits"
           name="databits"
           type="number"
-          placeholder="number of bits"
+          min="1"
+          max="128"
           value={formData.databits}
           onChange={handleInputChange}
           required
         />
+
         <br />
+        <br />
+
         <label htmlFor="encoding">Select encoding:</label>
+
         <select
-          name="encoding"
           id="encoding"
+          name="encoding"
           value={formData.encoding}
           onChange={handleInputChange}
           required
@@ -48,12 +62,39 @@ function Input({ updateInfo }) {
             Differential Manchester
           </option>
           <option value="ami">AMI</option>
-          <option value="mlt_3">MLT-3</option>
           <option value="pseudoternary">Pseudoternary</option>
+          <option value="mlt_3">MLT-3</option>
+          <option value="b8zs">B8ZS</option>
+          <option value="hdb3">HDB3</option>
         </select>
+
         <br />
+        <br />
+
+        <label htmlFor="noiseLevel">
+          Noise Level: {Number(formData.noiseLevel).toFixed(2)}
+        </label>
+
+        <input
+          id="noiseLevel"
+          name="noiseLevel"
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value={formData.noiseLevel}
+          onChange={handleInputChange}
+        />
+
+        <br />
+
+        <small>0 = clean signal, 1 = high noise</small>
+
+        <br />
+        <br />
+
         <button type="submit" className="btn btn-outline-info">
-          Submit
+          Generate Signal
         </button>
       </form>
     </div>

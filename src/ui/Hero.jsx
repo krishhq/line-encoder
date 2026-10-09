@@ -1,55 +1,18 @@
-// import { useEffect, useState } from "react";
-// import Graph from "./Graph.jsx";
-// import Input from "../ui/Input.jsx";
-// import {
-//   encodings,
-//   unipolar_NRZ,
-//   unipolar_RZ,
-//   polar_NRZ_L,
-//   polar_NRZ_I,
-//   polar_RZ,
-//   manchester,
-//   differential_manchester,
-//   ami,
-//   pseudoternary,
-//   mlt_3,
-//   b8zs,
-//   hdb3,
-// } from "../logic/encoding_algos.js";
-
-// function Hero() {
-//   let [info, setInfo] = useState({
-//     databits: "",
-//     encoding: "",
-//   });
-//   let updateInfo = (newInfo) => {
-//     setInfo(newInfo);
-//   };
-//   console.log("hero section", info);
-//   return (
-//     <div>
-//       <div className="container">
-//         <h1>Line Encoder</h1>
-//       </div>
-//       <div className="container">
-//         <Input updateInfo={updateInfo} />
-//         <Graph info={info} />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Hero;
 import { useState } from "react";
 import Graph from "./Graph.jsx";
-import Input from "../ui/Input.jsx";
+import Input from "./Input.jsx";
+
 import { data, clock, time, sampleSizeArr } from "../logic/input.js";
+
 import { encode, prepSignal } from "../logic/output.js";
+
+import { addAWGN } from "../logic/noise.js";
 
 function Hero() {
   const [info, setInfo] = useState({
     databits: "",
     encoding: "",
+    noiseLevel: 0.2,
   });
 
   const [graphData, setGraphData] = useState({
@@ -58,16 +21,26 @@ function Hero() {
     time: [],
     signal: [],
     graphSignal: [],
+    noisySignal: [],
   });
 
   const updateInfo = (newInfo) => {
-    setInfo(newInfo);
+    const k = Number(newInfo.databits);
+    const noiseLevel = Number(newInfo.noiseLevel);
+
+    if (!Number.isInteger(k) || k < 1) {
+      console.error("Enter a valid positive number of bits.");
+      return;
+    }
 
     const sampleInfo = sampleSizeArr.find(
       (item) => item.type === newInfo.encoding,
     );
 
-    const k = Number(newInfo.databits);
+    if (!sampleInfo) {
+      console.error("Sample size not found for encoding:", newInfo.encoding);
+      return;
+    }
 
     const bits = data(k);
     const clockArr = clock(k);
@@ -77,26 +50,41 @@ function Hero() {
 
     const graphSignal = prepSignal(signal, sampleInfo.sample);
 
+    const noisySignal = addAWGN(graphSignal, noiseLevel);
+
+    setInfo(newInfo);
+
+    console.table({
+      encoding: newInfo.encoding,
+      inputBits: bits.length,
+      clockLength: clockArr.length,
+      timeLength: timeArr.length,
+      cleanSignalLength: graphSignal.length,
+      noisySignalLength: noisySignal.length,
+      timeMatchesClock: timeArr.length === clockArr.length,
+      timeMatchesClean: timeArr.length === graphSignal.length,
+      timeMatchesNoisy: timeArr.length === noisySignal.length,
+    });
+
     setGraphData({
       bits,
       clock: clockArr,
       time: timeArr,
       signal,
       graphSignal,
+      noisySignal,
     });
   };
-
-  console.log("hero section", info);
-  console.log("graph data", graphData);
 
   return (
     <div>
       <div className="container">
-        <h1>Line Encoder</h1>
+        <h1>Line Encoder & Noise Simulator</h1>
       </div>
 
       <div className="container">
         <Input updateInfo={updateInfo} />
+
         <Graph info={info} graphData={graphData} />
       </div>
     </div>
