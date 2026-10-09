@@ -1,3 +1,5 @@
+// src/ui/Graph.jsx
+
 import { useEffect, useState } from "react";
 
 import {
@@ -22,7 +24,16 @@ ChartJS.register(
 );
 
 function Graph({ info, graphData }) {
-  const { bits, time, clock, graphSignal, noisySignal } = graphData;
+  const {
+    bits = [],
+    time = [],
+    clock = [],
+    graphSignal = [],
+    noisySignal = [],
+    recoveredBits = [],
+    metrics = null,
+    decodeError = null,
+  } = graphData;
 
   const [visiblePoints, setVisiblePoints] = useState(0);
 
@@ -37,8 +48,7 @@ function Graph({ info, graphData }) {
     let currentPoint = 0;
 
     const interval = setInterval(() => {
-      currentPoint++;
-
+      currentPoint += 1;
       setVisiblePoints(currentPoint);
 
       if (currentPoint >= time.length) {
@@ -54,7 +64,9 @@ function Graph({ info, graphData }) {
   const visibleSignal = graphSignal.slice(0, visiblePoints);
   const visibleNoisySignal = noisySignal.slice(0, visiblePoints);
 
-  const visibleBits = bits.slice(0, Math.ceil(visiblePoints / 2));
+  const visibleBitCount = Math.ceil(visiblePoints / 2);
+  const visibleBits = bits.slice(0, visibleBitCount);
+  const visibleRecoveredBits = recoveredBits.slice(0, visibleBitCount);
 
   const createChartData = (label, values, color) => ({
     labels: visibleTime,
@@ -89,9 +101,7 @@ function Graph({ info, graphData }) {
           display: true,
           text: yTitle,
         },
-        ticks: {
-          stepSize: 1,
-        },
+        ...(fixedClock ? { ticks: { stepSize: 1 } } : {}),
       },
     },
     plugins: {
@@ -100,6 +110,23 @@ function Graph({ info, graphData }) {
       },
     },
   });
+
+  const bitStyle = {
+    display: "inline-block",
+    padding: "6px 10px",
+    border: "1px solid #888",
+    borderRadius: "5px",
+    minWidth: "18px",
+    textAlign: "center",
+    fontWeight: "bold",
+  };
+
+  const bitRowStyle = {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    marginBottom: "24px",
+  };
 
   if (time.length === 0) {
     return (
@@ -114,25 +141,10 @@ function Graph({ info, graphData }) {
     <div className="container">
       <h2>Generated Data</h2>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "12px",
-          fontSize: "20px",
-          fontWeight: "bold",
-          marginBottom: "24px",
-        }}
-      >
+      <p>Transmitted bits</p>
+      <div style={bitRowStyle}>
         {visibleBits.map((bit, index) => (
-          <span
-            key={index}
-            style={{
-              padding: "6px 12px",
-              border: "1px solid #888",
-              borderRadius: "5px",
-            }}
-          >
+          <span key={index} style={bitStyle}>
             {bit}
           </span>
         ))}
@@ -155,6 +167,78 @@ function Graph({ info, graphData }) {
         data={createChartData("Noisy Signal", visibleNoisySignal, "#d97706")}
         options={createOptions("Amplitude")}
       />
+
+      <h2>Receiver Output</h2>
+
+      {decodeError ? (
+        <p style={{ color: "red" }}>Decoder error: {decodeError}</p>
+      ) : (
+        <>
+          <p>Recovered bits</p>
+          <div style={bitRowStyle}>
+            {visibleRecoveredBits.map((bit, index) => {
+              const matches = bits[index] === bit;
+
+              return (
+                <span
+                  key={index}
+                  title={matches ? "Matches transmitted bit" : "Bit error"}
+                  style={{
+                    ...bitStyle,
+                    borderColor: matches ? "#16803c" : "#dc2626",
+                    color: matches ? "#16803c" : "#dc2626",
+                  }}
+                >
+                  {bit}
+                </span>
+              );
+            })}
+          </div>
+
+          {metrics && (
+            <>
+              <h2>Transmission Accuracy</h2>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                  gap: "12px",
+                  marginBottom: "24px",
+                }}
+              >
+                <div style={{ border: "1px solid #888", padding: "12px" }}>
+                  <p>Total Bits</p>
+                  <strong>{metrics.totalBits}</strong>
+                </div>
+
+                <div style={{ border: "1px solid #888", padding: "12px" }}>
+                  <p>Bit Errors</p>
+                  <strong>{metrics.bitErrors}</strong>
+                </div>
+
+                <div style={{ border: "1px solid #888", padding: "12px" }}>
+                  <p>BER</p>
+                  <strong>
+                    {metrics.ber === null ? "N/A" : metrics.ber.toFixed(4)}
+                  </strong>
+                </div>
+
+                <div style={{ border: "1px solid #888", padding: "12px" }}>
+                  <p>Accuracy</p>
+                  <strong>
+                    {metrics.accuracy === null
+                      ? "N/A"
+                      : `${metrics.accuracy.toFixed(2)}%`}
+                  </strong>
+                </div>
+              </div>
+
+              <p>Noise level: {Number(info.noiseLevel).toFixed(2)}</p>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }

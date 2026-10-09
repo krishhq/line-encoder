@@ -206,6 +206,23 @@ const b8zs = (bits) => {
   return signal;
 };
 
+/**
+ * HDB3 (High-Density Bipolar 3 Zeros)
+ *
+ * Normal AMI:
+ *   1 = alternating +1 / -1
+ *   0 = 0
+ *
+ * Four consecutive zeros are replaced by:
+ *   000V when the number of nonzero pulses
+ *        since the previous violation is odd.
+ *
+ *   B00V when that number is even.
+ *
+ * B = balancing pulse with normal AMI polarity.
+ * V = violation pulse with the same polarity as B
+ *     in B00V, or the preceding pulse in 000V.
+ */
 const hdb3 = (bits) => {
   const signal = [];
 
@@ -213,29 +230,30 @@ const hdb3 = (bits) => {
   let pulseCount = 0;
 
   for (let i = 0; i < bits.length; ) {
-    // Check for 4 consecutive zeros
-    if (
+    const fourZeros =
       bits[i] === 0 &&
       bits[i + 1] === 0 &&
       bits[i + 2] === 0 &&
-      bits[i + 3] === 0
-    ) {
-      const V = lastPulse;
+      bits[i + 3] === 0;
 
+    if (fourZeros) {
       if (pulseCount % 2 === 0) {
-        // B00V
+        // B00V: B and V have the same polarity.
         const B = -lastPulse;
+        const V = B;
 
         signal.push(B, 0, 0, V);
-
         lastPulse = V;
       } else {
-        // 000V
-        signal.push(0, 0, 0, V);
+        // 000V: V has the same polarity as the
+        // preceding nonzero pulse.
+        const V = lastPulse;
 
+        signal.push(0, 0, 0, V);
         lastPulse = V;
       }
 
+      // Start counting from this substitution.
       pulseCount = 0;
       i += 4;
       continue;
